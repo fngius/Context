@@ -7,7 +7,7 @@
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="ContextOnt.owl">
-        <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"/>
+        <owl:imports rdf:resource="http://www.w3.org/2006/time"/>
         <owl:imports rdf:resource="http://www.w3.org/ns/ssn/"/>
     </owl:Ontology>
     
@@ -120,7 +120,7 @@
 
     <owl:ObjectProperty rdf:about="ContextOnt.owl#hasTime1">
         <rdfs:domain rdf:resource="ContextOnt.owl#Process"/>
-        <rdfs:range rdf:resource="ContextOnt.owl#Time"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
     </owl:ObjectProperty>
     
 
@@ -130,7 +130,7 @@
 
     <owl:ObjectProperty rdf:about="ContextOnt.owl#hasTime2">
         <rdfs:domain rdf:resource="ContextOnt.owl#Situation"/>
-        <rdfs:range rdf:resource="ContextOnt.owl#Time"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
     </owl:ObjectProperty>
     
 
@@ -140,7 +140,7 @@
 
     <owl:ObjectProperty rdf:about="ContextOnt.owl#hasTime3">
         <rdfs:domain rdf:resource="http://www.w3.org/ns/sosa/Sensor"/>
-        <rdfs:range rdf:resource="ContextOnt.owl#Time"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
     </owl:ObjectProperty>
     
 
@@ -443,19 +443,19 @@
     
 
 
-    <!-- ContextOnt.owl#Time -->
-
-
-    <owl:Class rdf:about="ContextOnt.owl#Time"/>
-    
-
-
     <!-- ContextOnt.owl#WorkStation -->
 
 
     <owl:Class rdf:about="ContextOnt.owl#WorkStation">
         <rdfs:subClassOf rdf:resource="ContextOnt.owl#Cell"/>
     </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2006/time#TemporalEntity -->
+
+
+    <owl:Class rdf:about="http://www.w3.org/2006/time#TemporalEntity"/>
     
 
 

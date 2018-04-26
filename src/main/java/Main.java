@@ -142,9 +142,9 @@ public class Main {
 		OWLAxiom LocationAx = factory.getOWLDeclarationAxiom(Location);
 		manager.addAxiom(ontology, LocationAx);
 		
-		OWLClass Time = factory.getOWLClass(IRI.create(contextOntIRI + "#Time"));
-		OWLAxiom TimeAx = factory.getOWLDeclarationAxiom(Time);
-		manager.addAxiom(ontology, TimeAx);
+		//OWLClass Time = factory.getOWLClass(IRI.create(contextOntIRI + "#Time"));
+		//OWLAxiom TimeAx = factory.getOWLDeclarationAxiom(Time);
+		//manager.addAxiom(ontology, TimeAx);
 		
 		OWLClass Process = factory.getOWLClass(IRI.create(contextOntIRI + "#Process"));
 		OWLAxiom ProcessAx = factory.getOWLDeclarationAxiom(Process);
@@ -216,9 +216,11 @@ public class Main {
 		
 		/* Imported Ontologies */
 		
-		OWLImportsDeclaration importDeclarationSWRLTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"));
-		manager.applyChange(new AddImport(ontology, importDeclarationSWRLTO));
-		
+		//OWLImportsDeclaration importDeclarationSWRLTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"));
+		//manager.applyChange(new AddImport(ontology, importDeclarationSWRLTO));
+		OWLImportsDeclaration importDeclarationSWRLTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/2006/time"));
+		manager.applyChange(new AddImport(ontology, importDeclarationSWRLTO));		
+			
 		OWLImportsDeclaration importDeclaration = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/ns/ssn/"));
 		manager.applyChange(new AddImport(ontology, importDeclaration));
 		
@@ -259,19 +261,19 @@ public class Main {
 		
 		OWLObjectProperty hasTime1 = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasTime1"));
 		OWLObjectPropertyDomainAxiom domhasTime1Ax = factory.getOWLObjectPropertyDomainAxiom(hasTime1, Process);
-		OWLObjectPropertyRangeAxiom   ranhasTime1Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime1, Time);
+		OWLObjectPropertyRangeAxiom   ranhasTime1Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime1, factory.getOWLClass(IRI.create("http://www.w3.org/2006/time#TemporalEntity")));
 		manager.addAxiom(ontology, domhasTime1Ax);
 		manager.addAxiom(ontology, ranhasTime1Ax);
 		
 		OWLObjectProperty hasTime2 = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasTime2"));
 		OWLObjectPropertyDomainAxiom domhasTime2Ax = factory.getOWLObjectPropertyDomainAxiom(hasTime2, Situation);
-		OWLObjectPropertyRangeAxiom   ranhasTime2Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime2, Time);
+		OWLObjectPropertyRangeAxiom   ranhasTime2Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime2, factory.getOWLClass(IRI.create("http://www.w3.org/2006/time#TemporalEntity")));
 		manager.addAxiom(ontology, domhasTime2Ax);
 		manager.addAxiom(ontology, ranhasTime2Ax);
 		
 		OWLObjectProperty hasTime3 = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasTime3"));
 		OWLObjectPropertyDomainAxiom domhasTime3Ax = factory.getOWLObjectPropertyDomainAxiom(hasTime3, factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Sensor")));
-		OWLObjectPropertyRangeAxiom   ranhasTime3Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime3, Time);
+		OWLObjectPropertyRangeAxiom   ranhasTime3Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime3, factory.getOWLClass(IRI.create("http://www.w3.org/2006/time#TemporalEntity")));
 		manager.addAxiom(ontology, domhasTime3Ax);
 		manager.addAxiom(ontology, ranhasTime3Ax);
 		
