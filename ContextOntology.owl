@@ -35,6 +35,16 @@
     
 
 
+    <!-- ContextOnt.owl#contains -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#contains">
+        <rdfs:domain rdf:resource="ContextOnt.owl#WorkStation"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Machine"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- ContextOnt.owl#happensIn -->
 
 
@@ -155,6 +165,16 @@
     
 
 
+    <!-- ContextOnt.owl#operates -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#operates">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Staff"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#ManufacturingFacility"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- ContextOnt.owl#performsProcess -->
 
 
@@ -180,42 +200,54 @@
     <!-- ContextOnt.owl#AssemblingMachine -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#AssemblingMachine"/>
+    <owl:Class rdf:about="ContextOnt.owl#AssemblingMachine">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Machine"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Cell -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Cell"/>
+    <owl:Class rdf:about="ContextOnt.owl#Cell">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Line"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Component -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Component"/>
+    <owl:Class rdf:about="ContextOnt.owl#Component">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Part"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Handling -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Handling"/>
+    <owl:Class rdf:about="ContextOnt.owl#Handling">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#LogisticProcess"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#HumanOperation -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#HumanOperation"/>
+    <owl:Class rdf:about="ContextOnt.owl#HumanOperation">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Process"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Line -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Line"/>
+    <owl:Class rdf:about="ContextOnt.owl#Line">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#ManufacturingFacility"/>
+    </owl:Class>
     
 
 
@@ -229,63 +261,81 @@
     <!-- ContextOnt.owl#LogisticProcess -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#LogisticProcess"/>
+    <owl:Class rdf:about="ContextOnt.owl#LogisticProcess">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Process"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Machine -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Machine"/>
+    <owl:Class rdf:about="ContextOnt.owl#Machine">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#ManufacturingFacility"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Maintenance -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Maintenance"/>
+    <owl:Class rdf:about="ContextOnt.owl#Maintenance">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#LogisticProcess"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#MaintenanceTechnician -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#MaintenanceTechnician"/>
+    <owl:Class rdf:about="ContextOnt.owl#MaintenanceTechnician">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Staff"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Manager -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Manager"/>
+    <owl:Class rdf:about="ContextOnt.owl#Manager">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Staff"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#ManufacturingFacility -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#ManufacturingFacility"/>
+    <owl:Class rdf:about="ContextOnt.owl#ManufacturingFacility">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Resource"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#ManufacturingProcess -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#ManufacturingProcess"/>
+    <owl:Class rdf:about="ContextOnt.owl#ManufacturingProcess">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Process"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Operator -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Operator"/>
+    <owl:Class rdf:about="ContextOnt.owl#Operator">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Staff"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Part -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Part"/>
+    <owl:Class rdf:about="ContextOnt.owl#Part">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Product"/>
+    </owl:Class>
     
 
 
@@ -299,21 +349,27 @@
     <!-- ContextOnt.owl#ProcessingMachine -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#ProcessingMachine"/>
+    <owl:Class rdf:about="ContextOnt.owl#ProcessingMachine">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Machine"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Product -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Product"/>
+    <owl:Class rdf:about="ContextOnt.owl#Product">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Resource"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Resource -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Resource"/>
+    <owl:Class rdf:about="ContextOnt.owl#Resource">
+        <rdfs:comment xml:lang="en">A class which represents resources of the industry</rdfs:comment>
+    </owl:Class>
     
 
 
@@ -329,35 +385,45 @@
     <!-- ContextOnt.owl#Sit_Assessment -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Sit_Assessment"/>
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Assessment">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Situation"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Sit_Classification -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Sit_Classification"/>
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Classification">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Situation"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Sit_Diagnosis -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Sit_Diagnosis"/>
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Diagnosis">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Situation"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Sit_Monitoring -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Sit_Monitoring"/>
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Monitoring">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Situation"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#Sit_Prediction -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Sit_Prediction"/>
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Prediction">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Situation"/>
+    </owl:Class>
     
 
 
@@ -371,14 +437,18 @@
     <!-- ContextOnt.owl#Staff -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#Staff"/>
+    <owl:Class rdf:about="ContextOnt.owl#Staff">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Resource"/>
+    </owl:Class>
     
 
 
     <!-- ContextOnt.owl#TestingMachine -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#TestingMachine"/>
+    <owl:Class rdf:about="ContextOnt.owl#TestingMachine">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Machine"/>
+    </owl:Class>
     
 
 
@@ -392,7 +462,9 @@
     <!-- ContextOnt.owl#WorkStation -->
 
 
-    <owl:Class rdf:about="ContextOnt.owl#WorkStation"/>
+    <owl:Class rdf:about="ContextOnt.owl#WorkStation">
+        <rdfs:subClassOf rdf:resource="ContextOnt.owl#Cell"/>
+    </owl:Class>
     
 
 
