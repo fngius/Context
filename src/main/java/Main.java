@@ -176,7 +176,7 @@ public class Main {
         
         
 		
-		File file = new File("/home/franco/eclipse-workspace/ContextOntology.owl");
+		File file = new File("/home/franco/Repositorios/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		manager.saveOntology(ontology, System.out);
 		
