@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="ContextOnt.owl#"
+     xml:base="ContextOnt.owl"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="ContextOnt.owl">
+        <owl:imports rdf:resource="http://www.w3.org/ns/ssn/"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    
+
+
+    <!-- ContextOnt.owl#isInLocation -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#isInLocation">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Resource"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Location"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    
+
+
+    <!-- ContextOnt.owl#AssemblingMachine -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#AssemblingMachine"/>
+    
+
+
+    <!-- ContextOnt.owl#Cell -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Cell"/>
+    
+
+
+    <!-- ContextOnt.owl#Component -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Component"/>
+    
+
+
+    <!-- ContextOnt.owl#Handling -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Handling"/>
+    
+
+
+    <!-- ContextOnt.owl#HumanOperation -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#HumanOperation"/>
+    
+
+
+    <!-- ContextOnt.owl#Line -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Line"/>
+    
+
+
+    <!-- ContextOnt.owl#Location -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Location"/>
+    
+
+
+    <!-- ContextOnt.owl#LogisticProcess -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#LogisticProcess"/>
+    
+
+
+    <!-- ContextOnt.owl#Machine -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Machine"/>
+    
+
+
+    <!-- ContextOnt.owl#Maintenance -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Maintenance"/>
+    
+
+
+    <!-- ContextOnt.owl#MaintenanceTechnician -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#MaintenanceTechnician"/>
+    
+
+
+    <!-- ContextOnt.owl#Manager -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Manager"/>
+    
+
+
+    <!-- ContextOnt.owl#ManufacturingFacility -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#ManufacturingFacility"/>
+    
+
+
+    <!-- ContextOnt.owl#ManufacturingProcess -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#ManufacturingProcess"/>
+    
+
+
+    <!-- ContextOnt.owl#Operator -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Operator"/>
+    
+
+
+    <!-- ContextOnt.owl#Part -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Part"/>
+    
+
+
+    <!-- ContextOnt.owl#Process -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Process"/>
+    
+
+
+    <!-- ContextOnt.owl#ProcessingMachine -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#ProcessingMachine"/>
+    
+
+
+    <!-- ContextOnt.owl#Product -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Product"/>
+    
+
+
+    <!-- ContextOnt.owl#Resource -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Resource"/>
+    
+
+
+    <!-- ContextOnt.owl#Sensor -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Sensor">
+        <owl:equivalentClass rdf:resource="https://www.w3.org/TR/vocab-ssn/#SOSASensor"/>
+    </owl:Class>
+    
+
+
+    <!-- ContextOnt.owl#Sit_Assessment -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Assessment"/>
+    
+
+
+    <!-- ContextOnt.owl#Sit_Classification -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Classification"/>
+    
+
+
+    <!-- ContextOnt.owl#Sit_Diagnosis -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Diagnosis"/>
+    
+
+
+    <!-- ContextOnt.owl#Sit_Monitoring -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Monitoring"/>
+    
+
+
+    <!-- ContextOnt.owl#Sit_Prediction -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Sit_Prediction"/>
+    
+
+
+    <!-- ContextOnt.owl#Situation -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Situation"/>
+    
+
+
+    <!-- ContextOnt.owl#Staff -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Staff"/>
+    
+
+
+    <!-- ContextOnt.owl#TestingMachine -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#TestingMachine"/>
+    
+
+
+    <!-- ContextOnt.owl#Time -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#Time"/>
+    
+
+
+    <!-- ContextOnt.owl#WorkStation -->
+
+
+    <owl:Class rdf:about="ContextOnt.owl#WorkStation"/>
+    
+
+
+    <!-- https://www.w3.org/TR/vocab-ssn/#SOSASensor -->
+
+
+    <owl:Class rdf:about="https://www.w3.org/TR/vocab-ssn/#SOSASensor"/>
+    
+
+
+    <!-- https://www.w3.org/TR/vocab-ssn/#SSNProperty -->
+
+
+    <owl:Class rdf:about="https://www.w3.org/TR/vocab-ssn/#SSNProperty"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 5.1.4) https://github.com/owlcs/owlapi/ -->
+
+

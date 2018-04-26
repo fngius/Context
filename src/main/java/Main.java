@@ -174,9 +174,8 @@ public class Main {
 		manager.addAxiom(ontology, domisInLocationAx);
 		manager.addAxiom(ontology, ranisInLocationAx);
         
-        
-		
-		File file = new File("/home/franco/Repositorios/ContextOntology.owl");
+        		
+		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		manager.saveOntology(ontology, System.out);
 		
