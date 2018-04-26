@@ -27,11 +27,15 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 public class Main {
 
 	public static void main(String[] args) throws OWLOntologyCreationException, OWLOntologyStorageException, IOException {
-		// TODO Auto-generated method stub
+		
+		/* Context Ontology */
+		
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 		String contextOntIRI = "ContextOnt.owl";
 		OWLOntology ontology = manager.createOntology(IRI.create(contextOntIRI));
 		OWLDataFactory factory = manager.getOWLDataFactory();
+		
+		/* Classes */
 		
 		OWLClass Resource = factory.getOWLClass(IRI.create(contextOntIRI + "#Resource"));
 		OWLAxiom ResourceAx = factory.getOWLDeclarationAxiom(Resource);
@@ -130,9 +134,9 @@ public class Main {
 		OWLAxiom subClassMTStaffAx = factory.getOWLSubClassOfAxiom(MaintenanceTechnician, Staff);
 		manager.addAxiom(ontology, subClassMTStaffAx);
 		
-		OWLClass Sensor = factory.getOWLClass(IRI.create(contextOntIRI + "#Sensor"));
-		OWLAxiom SensorAx = factory.getOWLDeclarationAxiom(Sensor);
-		manager.addAxiom(ontology, SensorAx);
+		//OWLClass Sensor = factory.getOWLClass(IRI.create(contextOntIRI + "#Sensor"));
+		//OWLAxiom SensorAx = factory.getOWLDeclarationAxiom(Sensor);
+		//manager.addAxiom(ontology, SensorAx);
 		
 		OWLClass Location = factory.getOWLClass(IRI.create(contextOntIRI + "#Location"));
 		OWLAxiom LocationAx = factory.getOWLDeclarationAxiom(Location);
@@ -210,20 +214,22 @@ public class Main {
 		OWLAxiom subClassSitClassSitAx = factory.getOWLSubClassOfAxiom(Sit_Classification, Situation);
 		manager.addAxiom(ontology, subClassSitClassSitAx);
 		
+		/* Imported Ontologies */
+		
 		OWLImportsDeclaration importDeclarationSWRLTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"));
 		manager.applyChange(new AddImport(ontology, importDeclarationSWRLTO));
 		
 		OWLImportsDeclaration importDeclaration = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/ns/ssn/"));
 		manager.applyChange(new AddImport(ontology, importDeclaration));
 		
-		OWLClass SSNSensor = factory.getOWLClass(IRI.create("https://www.w3.org/TR/vocab-ssn/#SOSASensor"));
+		//OWLClass SSNSensor = factory.getOWLClass(IRI.create("https://www.w3.org/TR/vocab-ssn/#SOSASensor"));
 		
-		OWLClass SSNProperty = factory.getOWLClass(IRI.create("https://www.w3.org/TR/vocab-ssn/#SSNProperty"));
-		OWLAxiom SSNPropertyAx = factory.getOWLDeclarationAxiom(SSNProperty);
-		manager.addAxiom(ontology, SSNPropertyAx);
+		//OWLClass SSNProperty = factory.getOWLClass(IRI.create("https://www.w3.org/TR/vocab-ssn/#SSNProperty"));
+		//OWLAxiom SSNPropertyAx = factory.getOWLDeclarationAxiom(SSNProperty);
+		//manager.addAxiom(ontology, SSNPropertyAx);
 		
-		OWLEquivalentClassesAxiom sensorEquiv = factory.getOWLEquivalentClassesAxiom(Sensor, SSNSensor);
-		manager.addAxiom(ontology, sensorEquiv);
+		//OWLEquivalentClassesAxiom sensorEquiv = factory.getOWLEquivalentClassesAxiom(Sensor, SSNSensor);
+		//manager.addAxiom(ontology, sensorEquiv);
 		
 		/* Object Properties */
 		
@@ -264,7 +270,7 @@ public class Main {
 		manager.addAxiom(ontology, ranhasTime2Ax);
 		
 		OWLObjectProperty hasTime3 = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasTime3"));
-		OWLObjectPropertyDomainAxiom domhasTime3Ax = factory.getOWLObjectPropertyDomainAxiom(hasTime3, Sensor);
+		OWLObjectPropertyDomainAxiom domhasTime3Ax = factory.getOWLObjectPropertyDomainAxiom(hasTime3, factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Sensor")));
 		OWLObjectPropertyRangeAxiom   ranhasTime3Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime3, Time);
 		manager.addAxiom(ontology, domhasTime3Ax);
 		manager.addAxiom(ontology, ranhasTime3Ax);
@@ -283,19 +289,19 @@ public class Main {
 		
 		OWLObjectProperty hasSensor = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasSensor"));
 		OWLObjectPropertyDomainAxiom domhasSensorAx = factory.getOWLObjectPropertyDomainAxiom(hasSensor, Resource);
-		OWLObjectPropertyRangeAxiom   ranhasSensorAx = factory.getOWLObjectPropertyRangeAxiom(hasSensor, Sensor);
+		OWLObjectPropertyRangeAxiom   ranhasSensorAx = factory.getOWLObjectPropertyRangeAxiom(hasSensor, factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Sensor")));
 		manager.addAxiom(ontology, domhasSensorAx);
 		manager.addAxiom(ontology, ranhasSensorAx);
 		
 		OWLObjectProperty locatedIn = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#locatedIn"));
-		OWLObjectPropertyDomainAxiom domlocatedInAx = factory.getOWLObjectPropertyDomainAxiom(locatedIn, Sensor);
+		OWLObjectPropertyDomainAxiom domlocatedInAx = factory.getOWLObjectPropertyDomainAxiom(locatedIn, factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Sensor")));
 		OWLObjectPropertyRangeAxiom   ranlocatedInAx = factory.getOWLObjectPropertyRangeAxiom(locatedIn, Location);
 		manager.addAxiom(ontology, domlocatedInAx);
 		manager.addAxiom(ontology, ranlocatedInAx);
 		
 		OWLObjectProperty hasProperty = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasProperty"));
 		OWLObjectPropertyDomainAxiom domhasPropertyAx = factory.getOWLObjectPropertyDomainAxiom(hasProperty, Resource);
-		OWLObjectPropertyRangeAxiom   ranhasPropertyAx = factory.getOWLObjectPropertyRangeAxiom(hasProperty, SSNProperty);
+		OWLObjectPropertyRangeAxiom   ranhasPropertyAx = factory.getOWLObjectPropertyRangeAxiom(hasProperty, factory.getOWLClass(IRI.create("http://www.w3.org/ns/ssn/Property")));
 		manager.addAxiom(ontology, domhasPropertyAx);
 		manager.addAxiom(ontology, ranhasPropertyAx);
 		
@@ -307,7 +313,7 @@ public class Main {
 		
 		OWLObjectProperty hasSensorLoc = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasSensorLoc"));
 		OWLObjectPropertyDomainAxiom domhasSensorLocAx = factory.getOWLObjectPropertyDomainAxiom(hasSensorLoc, Location);
-		OWLObjectPropertyRangeAxiom   ranhasSensorLocAx = factory.getOWLObjectPropertyRangeAxiom(hasSensorLoc, Sensor);
+		OWLObjectPropertyRangeAxiom   ranhasSensorLocAx = factory.getOWLObjectPropertyRangeAxiom(hasSensorLoc, factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Sensor")));
 		manager.addAxiom(ontology, domhasSensorLocAx);
 		manager.addAxiom(ontology, ranhasSensorLocAx);
 		
@@ -323,6 +329,7 @@ public class Main {
 		manager.addAxiom(ontology, domcontainsAx);
 		manager.addAxiom(ontology, rancontainsAx);
 		
+		/* Save ontology */
 		
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
