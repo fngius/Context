@@ -7,6 +7,7 @@
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="ContextOnt.owl">
+        <owl:imports rdf:resource="http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"/>
         <owl:imports rdf:resource="http://www.w3.org/ns/ssn/"/>
     </owl:Ontology>
     
@@ -24,12 +25,142 @@
     
 
 
+    <!-- ContextOnt.owl#appliesTo -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#appliesTo">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Process"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Resource"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#happensIn -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#happensIn">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Process"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Location"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasObject -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasObject">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Situation"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Resource"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasProcess -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasProcess">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Situation"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Process"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasProperty -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasProperty">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Resource"/>
+        <rdfs:range rdf:resource="https://www.w3.org/TR/vocab-ssn/#SSNProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasSensor -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasSensor">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Resource"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Sensor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasSensorLoc -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasSensorLoc">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Location"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Sensor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasSubProcess -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasSubProcess">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Process"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Process"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasTime1 -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasTime1">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Process"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Time"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasTime2 -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasTime2">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Situation"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Time"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#hasTime3 -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#hasTime3">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Sensor"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Time"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- ContextOnt.owl#isInLocation -->
 
 
     <owl:ObjectProperty rdf:about="ContextOnt.owl#isInLocation">
         <rdfs:domain rdf:resource="ContextOnt.owl#Resource"/>
         <rdfs:range rdf:resource="ContextOnt.owl#Location"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#locatedIn -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#locatedIn">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Sensor"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Location"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- ContextOnt.owl#performsProcess -->
+
+
+    <owl:ObjectProperty rdf:about="ContextOnt.owl#performsProcess">
+        <rdfs:domain rdf:resource="ContextOnt.owl#Resource"/>
+        <rdfs:range rdf:resource="ContextOnt.owl#Process"/>
     </owl:ObjectProperty>
     
 

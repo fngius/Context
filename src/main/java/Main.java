@@ -153,15 +153,17 @@ public class Main {
 		OWLAxiom Sit_ClassificationAx = factory.getOWLDeclarationAxiom(Sit_Classification);
 		manager.addAxiom(ontology, Sit_ClassificationAx);
 		
+		OWLImportsDeclaration importDeclarationSWRLTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"));
+		manager.applyChange(new AddImport(ontology, importDeclarationSWRLTO));
 		
 		OWLImportsDeclaration importDeclaration = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/ns/ssn/"));
 		manager.applyChange(new AddImport(ontology, importDeclaration));
 		
 		OWLClass SSNSensor = factory.getOWLClass(IRI.create("https://www.w3.org/TR/vocab-ssn/#SOSASensor"));
 		
-		OWLClass Property = factory.getOWLClass(IRI.create("https://www.w3.org/TR/vocab-ssn/#SSNProperty"));
-		OWLAxiom PropertyAx = factory.getOWLDeclarationAxiom(Property);
-		manager.addAxiom(ontology, PropertyAx);
+		OWLClass SSNProperty = factory.getOWLClass(IRI.create("https://www.w3.org/TR/vocab-ssn/#SSNProperty"));
+		OWLAxiom SSNPropertyAx = factory.getOWLDeclarationAxiom(SSNProperty);
+		manager.addAxiom(ontology, SSNPropertyAx);
 		
 		OWLEquivalentClassesAxiom sensorEquiv = factory.getOWLEquivalentClassesAxiom(Sensor, SSNSensor);
 		manager.addAxiom(ontology, sensorEquiv);
@@ -174,7 +176,87 @@ public class Main {
 		manager.addAxiom(ontology, domisInLocationAx);
 		manager.addAxiom(ontology, ranisInLocationAx);
         
-        		
+		OWLObjectProperty appliesTo = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#appliesTo"));
+		OWLObjectPropertyDomainAxiom domappliesToAx = factory.getOWLObjectPropertyDomainAxiom(appliesTo, Process);
+		OWLObjectPropertyRangeAxiom   ranappliesToAx = factory.getOWLObjectPropertyRangeAxiom(appliesTo, Resource);
+		manager.addAxiom(ontology, domappliesToAx);
+		manager.addAxiom(ontology, ranappliesToAx);
+		
+		OWLObjectProperty performsProcess = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#performsProcess"));
+		OWLObjectPropertyDomainAxiom domperformsProcessAx = factory.getOWLObjectPropertyDomainAxiom(performsProcess, Resource);
+		OWLObjectPropertyRangeAxiom   ranperformsProcessAx = factory.getOWLObjectPropertyRangeAxiom(performsProcess, Process);
+		manager.addAxiom(ontology, domperformsProcessAx);
+		manager.addAxiom(ontology, ranperformsProcessAx);
+		
+		OWLObjectProperty happensIn = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#happensIn"));
+		OWLObjectPropertyDomainAxiom domhappensInAx = factory.getOWLObjectPropertyDomainAxiom(happensIn, Process);
+		OWLObjectPropertyRangeAxiom   ranhappensInAx = factory.getOWLObjectPropertyRangeAxiom(happensIn, Location);
+		manager.addAxiom(ontology, domhappensInAx);
+		manager.addAxiom(ontology, ranhappensInAx);
+		
+		OWLObjectProperty hasTime1 = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasTime1"));
+		OWLObjectPropertyDomainAxiom domhasTime1Ax = factory.getOWLObjectPropertyDomainAxiom(hasTime1, Process);
+		OWLObjectPropertyRangeAxiom   ranhasTime1Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime1, Time);
+		manager.addAxiom(ontology, domhasTime1Ax);
+		manager.addAxiom(ontology, ranhasTime1Ax);
+		
+		OWLObjectProperty hasTime2 = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasTime2"));
+		OWLObjectPropertyDomainAxiom domhasTime2Ax = factory.getOWLObjectPropertyDomainAxiom(hasTime2, Situation);
+		OWLObjectPropertyRangeAxiom   ranhasTime2Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime2, Time);
+		manager.addAxiom(ontology, domhasTime2Ax);
+		manager.addAxiom(ontology, ranhasTime2Ax);
+		
+		OWLObjectProperty hasTime3 = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasTime3"));
+		OWLObjectPropertyDomainAxiom domhasTime3Ax = factory.getOWLObjectPropertyDomainAxiom(hasTime3, Sensor);
+		OWLObjectPropertyRangeAxiom   ranhasTime3Ax = factory.getOWLObjectPropertyRangeAxiom(hasTime3, Time);
+		manager.addAxiom(ontology, domhasTime3Ax);
+		manager.addAxiom(ontology, ranhasTime3Ax);
+		
+		OWLObjectProperty hasSubProcess = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasSubProcess"));
+		OWLObjectPropertyDomainAxiom domhasSubProcessAx = factory.getOWLObjectPropertyDomainAxiom(hasSubProcess, Process);
+		OWLObjectPropertyRangeAxiom   ranhasSubProcessAx = factory.getOWLObjectPropertyRangeAxiom(hasSubProcess, Process);
+		manager.addAxiom(ontology, domhasSubProcessAx);
+		manager.addAxiom(ontology, ranhasSubProcessAx);
+		
+		OWLObjectProperty hasProcess = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasProcess"));
+		OWLObjectPropertyDomainAxiom domhasProcessAx = factory.getOWLObjectPropertyDomainAxiom(hasProcess, Situation);
+		OWLObjectPropertyRangeAxiom   ranhasProcessAx = factory.getOWLObjectPropertyRangeAxiom(hasProcess, Process);
+		manager.addAxiom(ontology, domhasProcessAx);
+		manager.addAxiom(ontology, ranhasProcessAx);
+		
+		OWLObjectProperty hasSensor = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasSensor"));
+		OWLObjectPropertyDomainAxiom domhasSensorAx = factory.getOWLObjectPropertyDomainAxiom(hasSensor, Resource);
+		OWLObjectPropertyRangeAxiom   ranhasSensorAx = factory.getOWLObjectPropertyRangeAxiom(hasSensor, Sensor);
+		manager.addAxiom(ontology, domhasSensorAx);
+		manager.addAxiom(ontology, ranhasSensorAx);
+		
+		OWLObjectProperty locatedIn = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#locatedIn"));
+		OWLObjectPropertyDomainAxiom domlocatedInAx = factory.getOWLObjectPropertyDomainAxiom(locatedIn, Sensor);
+		OWLObjectPropertyRangeAxiom   ranlocatedInAx = factory.getOWLObjectPropertyRangeAxiom(locatedIn, Location);
+		manager.addAxiom(ontology, domlocatedInAx);
+		manager.addAxiom(ontology, ranlocatedInAx);
+		
+		OWLObjectProperty hasProperty = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasProperty"));
+		OWLObjectPropertyDomainAxiom domhasPropertyAx = factory.getOWLObjectPropertyDomainAxiom(hasProperty, Resource);
+		OWLObjectPropertyRangeAxiom   ranhasPropertyAx = factory.getOWLObjectPropertyRangeAxiom(hasProperty, SSNProperty);
+		manager.addAxiom(ontology, domhasPropertyAx);
+		manager.addAxiom(ontology, ranhasPropertyAx);
+		
+		OWLObjectProperty hasObject = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasObject"));
+		OWLObjectPropertyDomainAxiom domhasObjectAx = factory.getOWLObjectPropertyDomainAxiom(hasObject, Situation);
+		OWLObjectPropertyRangeAxiom   ranhasObjectAx = factory.getOWLObjectPropertyRangeAxiom(hasObject, Resource);
+		manager.addAxiom(ontology, domhasObjectAx);
+		manager.addAxiom(ontology, ranhasObjectAx);
+		
+		OWLObjectProperty hasSensorLoc = factory.getOWLObjectProperty(IRI.create(contextOntIRI + "#hasSensorLoc"));
+		OWLObjectPropertyDomainAxiom domhasSensorLocAx = factory.getOWLObjectPropertyDomainAxiom(hasSensorLoc, Location);
+		OWLObjectPropertyRangeAxiom   ranhasSensorLocAx = factory.getOWLObjectPropertyRangeAxiom(hasSensorLoc, Sensor);
+		manager.addAxiom(ontology, domhasSensorLocAx);
+		manager.addAxiom(ontology, ranhasSensorLocAx);
+		
+		
+		
+		
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		manager.saveOntology(ontology, System.out);
