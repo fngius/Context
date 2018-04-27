@@ -163,6 +163,7 @@ public class Main {
 		OWLObjectProperty contains = oa.createObjectProperty(ontology, manager, factory, contextOntIRI + "#contains", WorkStation, Machine);
 		
 		/* Datatype Properties */
+		OWLDataProperty value = oa.createDataProperty(ontology, manager, factory, contextOntIRI + "#value", Property, factory.getIntegerOWLDatatype());
 		
 		
 		/* Individuals */
@@ -178,9 +179,9 @@ public class Main {
 		
 		oa.relateIndividuals(ontology, manager, factory, operates, Operator_1, Machine_1);
 		
-		OWLDataProperty value = oa.createDataProperty(ontology, manager, factory, contextOntIRI + "#value", Property, factory.getIntegerOWLDatatype());
 	    
 		oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(33.2));
+		oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(36.2));
 		
 		/* Save ontology */
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");

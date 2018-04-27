@@ -544,6 +544,7 @@
     <owl:NamedIndividual rdf:about="ContextOnt.owl#Temperature">
         <rdf:type rdf:resource="http://www.w3.org/ns/ssn/Property"/>
         <value rdf:datatype="http://www.w3.org/2001/XMLSchema#double">33.2</value>
+        <value rdf:datatype="http://www.w3.org/2001/XMLSchema#double">36.2</value>
     </owl:NamedIndividual>
 </rdf:RDF>
 
