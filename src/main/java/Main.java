@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLException;
 import org.semanticweb.owlapi.model.OWLImportsDeclaration;
 import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
@@ -176,13 +177,10 @@ public class Main {
 		oa.relateIndividuals(ontology, manager, factory, hasSensor, Machine_1, SensorTemp);
 		
 		oa.relateIndividuals(ontology, manager, factory, operates, Operator_1, Machine_1);
-
-		//OWLDataProperty value = factory.getOWLDataProperty(IRI.create(contextOntIRI + "#value"));
 		
 		OWLDataProperty value = oa.createDataProperty(ontology, manager, factory, contextOntIRI + "#value", Property, factory.getIntegerOWLDatatype());
 	    
-		OWLAxiom axiom4 = factory.getOWLDataPropertyAssertionAxiom(value, Temperature, 33);
-		manager.applyChange(new AddAxiom(ontology, axiom4));
+		oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(33.2));
 		
 		/* Save ontology */
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");

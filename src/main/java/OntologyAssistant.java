@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
@@ -57,6 +58,11 @@ public class OntologyAssistant {
 		m.addAxiom(o, domAx);
 		m.addAxiom(o, ranAx);
 		return f.getOWLDataProperty(IRI.create(prop));
+	}
+
+	public void assignValueToDataTypeProperty(OWLOntology o, OWLOntologyManager m, OWLDataFactory f, OWLDataProperty dataProp, OWLIndividual ind, OWLLiteral dat) {
+		OWLAxiom axiom = f.getOWLDataPropertyAssertionAxiom(dataProp, ind, dat);
+		m.applyChange(new AddAxiom(o, axiom));	
 	}
 	
 }
