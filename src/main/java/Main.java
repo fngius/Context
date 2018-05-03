@@ -1,6 +1,11 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.stream.Stream;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.AddAxiom;
@@ -29,6 +34,8 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+
+import com.google.common.io.Files;
 
 public class Main {
 
@@ -188,10 +195,32 @@ public class Main {
 		oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(33.2));
 		oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(36.2));
 		
+		
+		
+		
+		// Open the file
+		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom.data");
+		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+		String strLine;
+
+		//Read File Line By Line
+		while ((strLine = br.readLine()) != null)   {
+		  // Print the content on the console
+		  System.out.println (strLine);
+		  System.out.println (strLine.split(" ")[0]);
+		  oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(Double.parseDouble(strLine.split(" ")[0])));
+
+		}
+
 		/* Save ontology */
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		manager.saveOntology(ontology, System.out);
+
+		//Close the input stream
+		br.close();
+
 	}
 
 }
