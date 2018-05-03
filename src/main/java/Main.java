@@ -46,9 +46,12 @@ public class Main {
 		/* Imported Ontologies */
 		OWLImportsDeclaration importDeclarationTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/2006/time"));
 		manager.applyChange(new AddImport(ontology, importDeclarationTO));		
-			
-		OWLImportsDeclaration importDeclaration = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/ns/ssn/"));
-		manager.applyChange(new AddImport(ontology, importDeclaration));
+		
+		OWLImportsDeclaration importDeclarationLOC = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://schemas.opengis.net/geosparql/1.0/geosparql_vocab_all.rdf"));
+		manager.applyChange(new AddImport(ontology, importDeclarationLOC));
+		
+		OWLImportsDeclaration importDeclarationSSN = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/ns/ssn/"));
+		manager.applyChange(new AddImport(ontology, importDeclarationSSN));
 
 		/* Classes */
 		OWLClass Resource = oa.createClass(ontology,manager,factory,contextOntIRI+"#Resource");
@@ -134,7 +137,9 @@ public class Main {
 		oa.subClass(ontology, manager, factory, Sit_Classification, Situation);
 
 		// Replace this class
-		OWLClass Location = oa.createClass(ontology,manager,factory,contextOntIRI+"#Location");
+		//OWLClass Location = oa.createClass(ontology,manager,factory,contextOntIRI+"#Location");
+		String location = "http://www.opengis.net/ont/geosparql#SpatialObject";
+		OWLClass Location = factory.getOWLClass(IRI.create(location));
 		
 		String sensor = "http://www.w3.org/ns/sosa/Sensor";
 		OWLClass Sensor = factory.getOWLClass(IRI.create(sensor));
