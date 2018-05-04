@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.stream.Stream;
@@ -198,28 +200,40 @@ public class Main {
 		
 		
 		
-		// Open the file
+		/* // To put together data, labels and timestamps.
 		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom.data");
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-
+		FileInputStream fstream1 = new FileInputStream("/home/franco/DataSets/SECOM/secom_labels.data");
+		BufferedReader br1 = new BufferedReader(new InputStreamReader(fstream1));
 		String strLine;
-
-		//Read File Line By Line
-		while ((strLine = br.readLine()) != null)   {
-		  // Print the content on the console
-		  System.out.println (strLine);
-		  System.out.println (strLine.split(" ")[0]);
-		  oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(Double.parseDouble(strLine.split(" ")[0])));
-
+		String strLine1;
+		FileWriter fichero = null;
+        PrintWriter pw = null;
+        fichero = new FileWriter("/home/franco/DataSets/SECOM/secom_final.data");
+        pw = new PrintWriter(fichero);
+   		while (((strLine = br.readLine()) != null) && ((strLine1 = br1.readLine()) != null))   {
+		  System.out.println (strLine1);
+		  pw.println(strLine1 + " " + strLine);
 		}
+		br.close();
+		br1.close();
+		pw.close(); */
+
+		/* Populate ontology with data from sensors */
+		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom_final.data");
+		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+		String strLine;
+		//int i = 0;
+   		while ((strLine = br.readLine()) != null)   {
+		  //System.out.println (i++);
+		  oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(Double.parseDouble(strLine.split(" ")[3])));
+   		}
+		br.close();
 
 		/* Save ontology */
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
-		manager.saveOntology(ontology, System.out);
-
-		//Close the input stream
-		br.close();
+		//manager.saveOntology(ontology, System.out);
 
 	}
 
