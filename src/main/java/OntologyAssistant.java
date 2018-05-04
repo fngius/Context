@@ -64,5 +64,4 @@ public class OntologyAssistant {
 		OWLAxiom axiom = f.getOWLDataPropertyAssertionAxiom(dataProp, ind, dat);
 		m.applyChange(new AddAxiom(o, axiom));	
 	}
-	
 }

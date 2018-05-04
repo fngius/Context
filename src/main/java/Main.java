@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.stream.Stream;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.change.CreateValuePartition;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.AddImport;
 //import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
@@ -153,6 +154,9 @@ public class Main {
 		String sensor = "http://www.w3.org/ns/sosa/Sensor";
 		OWLClass Sensor = factory.getOWLClass(IRI.create(sensor));
 		OWLClass Property = factory.getOWLClass(IRI.create("http://www.w3.org/ns/ssn/Property"));
+		OWLClass Observation = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Observation"));
+		OWLClass Result = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Result"));
+		
 		
 		String time = "http://www.w3.org/2006/time#TemporalEntity";
 		OWLClass Time = factory.getOWLClass(IRI.create(time));
@@ -176,8 +180,16 @@ public class Main {
 		OWLObjectProperty operates = oa.createObjectProperty(ontology, manager, factory, contextOntIRI + "#operates", Staff, ManufacturingFacility);
 		OWLObjectProperty contains = oa.createObjectProperty(ontology, manager, factory, contextOntIRI + "#contains", WorkStation, Machine);
 		
+		OWLObjectProperty observedProperty = factory.getOWLObjectProperty(IRI.create("http://www.w3.org/ns/sosa/observedProperty"));
+
+		OWLObjectProperty madeBySensor = factory.getOWLObjectProperty(IRI.create("http://www.w3.org/ns/sosa/madeBySensor"));
+
 		/* Datatype Properties */
 		OWLDataProperty value = oa.createDataProperty(ontology, manager, factory, contextOntIRI + "#value", Property, factory.getIntegerOWLDatatype());
+		
+		OWLDataProperty hasSimpleResult = factory.getOWLDataProperty(IRI.create("http://www.w3.org/ns/sosa/hasSimpleResult"));
+		
+		OWLDataProperty resultTime = factory.getOWLDataProperty(IRI.create("http://www.w3.org/ns/sosa/resultTime"));
 		
 		
 		/* Individuals */
@@ -223,10 +235,15 @@ public class Main {
 		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom_final.data");
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 		String strLine;
-		//int i = 0;
+		int i = 0;
    		while ((strLine = br.readLine()) != null)   {
-		  //System.out.println (i++);
-		  oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(Double.parseDouble(strLine.split(" ")[3])));
+   			//System.out.println (i++);
+   			i++;
+   			oa.createIndividual(ontology, manager, factory, contextOntIRI + "#O" + Integer.toString(i) , Observation);
+   			oa.relateIndividuals(ontology, manager, factory, madeBySensor, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), SensorTemp);
+   			oa.relateIndividuals(ontology, manager, factory, observedProperty, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), Temperature);
+   			oa.assignValueToDataTypeProperty(ontology, manager, factory, hasSimpleResult, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), factory.getOWLLiteral(Double.parseDouble(strLine.split(" ")[3])));
+   			oa.assignValueToDataTypeProperty(ontology, manager, factory, resultTime, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), factory.getOWLLiteral(strLine.split(" ")[1] + " " + strLine.split(" ")[2]));
    		}
 		br.close();
 
