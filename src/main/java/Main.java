@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.stream.Stream;
 
@@ -35,15 +36,25 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.model.SWRLClassAtom;
+import org.semanticweb.owlapi.model.SWRLRule;
+import org.semanticweb.owlapi.model.SWRLVariable;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.swrlapi.core.SWRLRuleEngine;
+import org.swrlapi.exceptions.SWRLBuiltInException;
+import org.swrlapi.factory.SWRLAPIFactory;
+import org.swrlapi.parser.SWRLParseException;
+import org.swrlapi.sqwrl.SQWRLQueryEngine;
+import org.swrlapi.sqwrl.SQWRLResult;
+import org.swrlapi.sqwrl.exceptions.SQWRLException;
 
-import com.google.common.io.Files;
+//import com.google.common.io.Files;
 
 public class Main {
 
 	
-	public static void main(String[] args) throws OWLOntologyCreationException, OWLOntologyStorageException, IOException {
+	public static void main(String[] args) throws OWLOntologyCreationException, OWLOntologyStorageException, IOException, SQWRLException, SWRLParseException {
 		
 		/* Context Ontology */
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
@@ -247,10 +258,46 @@ public class Main {
    		}
 		br.close();
 
+		SWRLVariable var = factory.getSWRLVariable(IRI.create(contextOntIRI + "#x"));
+		SWRLClassAtom body = factory.getSWRLClassAtom(Machine, var);
+		SWRLClassAtom head = factory.getSWRLClassAtom(ManufacturingFacility, var);
+		SWRLRule rule = factory.getSWRLRule(Collections.singleton(body), Collections.singleton(head));
+		manager.applyChange(new AddAxiom(ontology, rule));
+
+		//SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);
+		SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);
+
+		// Create SQWRL query engine using the SWRLAPI
+		SQWRLQueryEngine queryEngine = SWRLAPIFactory.createSQWRLQueryEngine(ontology);
+
+		// Create and execute a SQWRL query using the SWRLAPI
+		SQWRLResult result = queryEngine.runSQWRLQuery("q1","swrlb:add(?x, 2, 2) -> sqwrl:select(?x)");
+
+		// Process the SQWRL result
+		if (result.next()) 
+		  System.out.println("Name: " + result.getLiteral("x"));
+		  
+			
 		/* Save ontology */
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		//manager.saveOntology(ontology, System.out);
+
+		
+		//try {
+		//	SWRLRule rule = ruleEngine.createSWRLRule("r1", "swrlb:add(?x, 2, 2) -> sqwrl:select(?x)");
+		//} catch (SWRLBuiltInException e) {
+			// TODO Auto-generated catch block
+		//	e.printStackTrace();
+		//}
+		// Run the rule engine
+		//ruleEngine.infer();
+		 
+		//SQWRLQueryEngine queryEngine = SWRLAPIFactory.createSQWRLQueryEngine(ontology);
+
+		//queryEngine.createSQWRLQuery("Q1", "Machine(?p) -> sqwrl:select(?p)");
+
+		//SQWRLResult result = queryEngine.runSQWRLQuery("Q1");
 
 	}
 
