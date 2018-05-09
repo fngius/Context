@@ -1,3 +1,4 @@
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,10 +7,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import org.checkerframework.checker.i18nformatter.qual.I18nFormat;
+import org.checkerframework.dataflow.cfg.node.GreaterThanNode;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.change.CreateValuePartition;
 import org.semanticweb.owlapi.model.AddAxiom;
@@ -22,6 +29,8 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLDatatypeRestriction;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
 //import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLException;
@@ -31,16 +40,29 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.model.PrefixManager;
+import org.semanticweb.owlapi.model.SWRLAtom;
+import org.semanticweb.owlapi.model.SWRLBuiltInAtom;
 import org.semanticweb.owlapi.model.SWRLClassAtom;
+import org.semanticweb.owlapi.model.SWRLDArgument;
+import org.semanticweb.owlapi.model.SWRLDataPropertyAtom;
+import org.semanticweb.owlapi.model.SWRLLiteralArgument;
+import org.semanticweb.owlapi.model.SWRLObjectPropertyAtom;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.model.SWRLVariable;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.util.DefaultPrefixManager;
+import org.semanticweb.owlapi.vocab.OWL2Datatype;
+import org.semanticweb.owlapi.vocab.OWLFacet;
+import org.swrlapi.builtins.arguments.SWRLDataPropertyBuiltInArgument;
+import org.swrlapi.core.SWRLAPIBuiltInAtom;
 import org.swrlapi.core.SWRLRuleEngine;
 import org.swrlapi.exceptions.SWRLBuiltInException;
 import org.swrlapi.factory.SWRLAPIFactory;
@@ -48,6 +70,8 @@ import org.swrlapi.parser.SWRLParseException;
 import org.swrlapi.sqwrl.SQWRLQueryEngine;
 import org.swrlapi.sqwrl.SQWRLResult;
 import org.swrlapi.sqwrl.exceptions.SQWRLException;
+
+import com.google.common.collect.Lists;
 
 //import com.google.common.io.Files;
 
@@ -58,14 +82,24 @@ public class Main {
 		
 		/* Context Ontology */
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		String contextOntIRI = "ContextOnt.owl";
+		String contextOntIRI = "ContextOnt";
 		OWLOntology ontology = manager.createOntology(IRI.create(contextOntIRI));
 		OWLDataFactory factory = manager.getOWLDataFactory();
 
+		manager.getOntologyFormat(ontology).asPrefixOWLOntologyFormat().setDefaultPrefix(contextOntIRI);
+		
 		OntologyAssistant oa = new OntologyAssistant();
 		
-		/* Imported Ontologies */
-		OWLImportsDeclaration importDeclarationTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/2006/time"));
+		
+		OWLDatatype integerDatatype = factory.getIntegerOWLDatatype();
+		OWLDatatype floatDatatype = factory.getFloatOWLDatatype();
+		OWLDatatype doubleDatatype = factory.getDoubleOWLDatatype();
+		OWLDatatype booleanDatatype = factory.getBooleanOWLDatatype();
+	    OWLDatatype dateTime = factory.getOWLDatatype(IRI.create("http://www.w3.org/2001/XMLSchema#dateTime"));
+
+	    /* Imported Ontologies */
+		//OWLImportsDeclaration importDeclarationTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/2006/time"));
+		OWLImportsDeclaration importDeclarationTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"));
 		manager.applyChange(new AddImport(ontology, importDeclarationTO));		
 		
 		OWLImportsDeclaration importDeclarationLOC = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://schemas.opengis.net/geosparql/1.0/geosparql_vocab_all.rdf"));
@@ -75,7 +109,7 @@ public class Main {
 		manager.applyChange(new AddImport(ontology, importDeclarationSSN));
 
 		/* Classes */
-		OWLClass Resource = oa.createClass(ontology,manager,factory,contextOntIRI+"#Resource");
+		OWLClass Resource = oa.createClass(ontology,manager,factory,"#Resource");
 		oa.addAnnotationComment(ontology, manager, factory, Resource, "A class which represents resources of the industry");
 
 		OWLClass Product = oa.createClass(ontology,manager,factory,contextOntIRI+"#Product");
@@ -142,6 +176,8 @@ public class Main {
 		
 		OWLClass Situation = oa.createClass(ontology,manager,factory,contextOntIRI+"#Situation");
 		
+		OWLClass Danger = oa.createClass(ontology,manager,factory,contextOntIRI+"#Danger");
+		
 		OWLClass Sit_Diagnosis = oa.createClass(ontology,manager,factory,contextOntIRI+"#Sit_Diagnosis");
 		oa.subClass(ontology, manager, factory, Sit_Diagnosis, Situation);
 		
@@ -169,8 +205,11 @@ public class Main {
 		OWLClass Result = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Result"));
 		
 		
-		String time = "http://www.w3.org/2006/time#TemporalEntity";
+		//String time = "http://www.w3.org/2006/time#TemporalEntity";
+		String time = "http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#ValidTime";
 		OWLClass Time = factory.getOWLClass(IRI.create(time));
+		String validInstant = "http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#ValidInstant";
+		OWLClass ValidInstant = factory.getOWLClass(IRI.create(validInstant));
 		
 		
 		/* Object Properties */
@@ -195,6 +234,8 @@ public class Main {
 
 		OWLObjectProperty madeBySensor = factory.getOWLObjectProperty(IRI.create("http://www.w3.org/ns/sosa/madeBySensor"));
 
+		OWLObjectProperty dif = factory.getOWLObjectProperty(IRI.create("http://www.w3.org/2002/07/owl#differentFrom"));
+		
 		/* Datatype Properties */
 		OWLDataProperty value = oa.createDataProperty(ontology, manager, factory, contextOntIRI + "#value", Property, factory.getIntegerOWLDatatype());
 		
@@ -202,6 +243,7 @@ public class Main {
 		
 		OWLDataProperty resultTime = factory.getOWLDataProperty(IRI.create("http://www.w3.org/ns/sosa/resultTime"));
 		
+		OWLDataProperty hasTimeT = factory.getOWLDataProperty(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#hasTime"));
 		
 		/* Individuals */
 		OWLIndividual Machine_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Machine_1", Machine);
@@ -242,62 +284,121 @@ public class Main {
 		br1.close();
 		pw.close(); */
 
+		
+		//Observation(?p)^hasSimpleResult(?p, ?age)^swrlb:greaterThan(?age, 3029) -> Danger(?p)
+		SWRLVariable obs1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#x"));
+		SWRLVariable obs2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#x1"));
+		SWRLVariable res1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#y"));
+		SWRLVariable res2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#y1"));
+		SWRLVariable time1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#z1"));
+		SWRLVariable time2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#z2"));
+		SWRLVariable validInstant1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#a"));
+		SWRLVariable validInstant2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#b"));
+		SWRLVariable timeVI1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#c"));
+		SWRLVariable timeVI2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#d"));
+		
+		SWRLClassAtom atom1 = factory.getSWRLClassAtom(Observation, obs1);
+		SWRLClassAtom atom2 = factory.getSWRLClassAtom(Observation, obs2);
+		
+		//SWRLObjectPropertyAtom atom12 = factory.getSWRLObjectPropertyAtom(dif, obs1, obs2);
+		
+
+		SWRLDataPropertyAtom atom3 = factory.getSWRLDataPropertyAtom(hasSimpleResult, obs1, res1);
+		SWRLDataPropertyAtom atom4 = factory.getSWRLDataPropertyAtom(hasSimpleResult, obs2, res2);
+		SWRLDataPropertyAtom atom5 = factory.getSWRLDataPropertyAtom(resultTime, obs1, time1);
+		SWRLDataPropertyAtom atom6 = factory.getSWRLDataPropertyAtom(resultTime, obs2, time2);
+		
+		//SWRLClassAtom atom7 = factory.getSWRLClassAtom(ValidInstant, validInstant1);
+		//SWRLClassAtom atom8 = factory.getSWRLClassAtom(ValidInstant, validInstant2);
+		//SWRLDataPropertyAtom atom9 = factory.getSWRLDataPropertyAtom(hasTimeT, validInstant1, timeVI1);
+		//SWRLDataPropertyAtom atom10 = factory.getSWRLDataPropertyAtom(hasTimeT, validInstant2, timeVI2);
+		
+		
+		//SWRLLiteralArgument d1 = factory.getSWRLLiteralArgument(factory.getOWLLiteral("2008-07-19T11:55:00.000",OWL2Datatype.XSD_DATE_TIME));
+		//SWRLLiteralArgument d2 = factory.getSWRLLiteralArgument(factory.getOWLLiteral("2008-07-19T12:32:00.000",OWL2Datatype.XSD_DATE_TIME));
+		//List<SWRLDArgument> messages1 = Arrays.asList(d1, d2);
+		List<SWRLDArgument> messages1 = Arrays.asList(time1, time2);
+		//List<SWRLDArgument> messages1 = Arrays.asList(timeVI1, timeVI2);
+		//List<SWRLDArgument> messages1 = Arrays.asList(validInstant1, validInstant2);
+		
+		//SWRLBuiltInAtom atom11 = factory.getSWRLBuiltInAtom(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#equals"),  messages1);
+		SWRLBuiltInAtom atom11 = factory.getSWRLBuiltInAtom(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#before"),  messages1);
+
+
+		OWLLiteral maxValue = factory.getOWLLiteral("3030", doubleDatatype);
+        SWRLLiteralArgument maxValueArg = factory.getSWRLLiteralArgument(maxValue);
+        List<SWRLDArgument> messages = Arrays.asList(res1,maxValueArg);
+		SWRLBuiltInAtom atom = factory.getSWRLBuiltInAtom(IRI.create("http://www.w3.org/2003/11/swrlb#greaterThan"),  messages);
+		
+		Set<SWRLAtom> antecedent = new HashSet<SWRLAtom>();
+		antecedent.add(atom);
+		antecedent.add(atom1);
+        antecedent.add(atom2);
+        antecedent.add(atom3);
+        antecedent.add(atom4);
+        antecedent.add(atom5);
+        antecedent.add(atom6);
+        //antecedent.add(atom7);
+        //antecedent.add(atom8);
+        //antecedent.add(atom9);
+        //antecedent.add(atom10);
+        antecedent.add(atom11);
+        //antecedent.add(atom12);
+
+
+		SWRLClassAtom head = factory.getSWRLClassAtom(Danger, obs1);
+		SWRLRule rule = factory.getSWRLRule(antecedent, Collections.singleton(head));
+		manager.applyChange(new AddAxiom(ontology, rule));
+
+
+		//SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);
+
+
 		/* Populate ontology with data from sensors */
 		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom_final.data");
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 		String strLine;
 		int i = 0;
-   		while ((strLine = br.readLine()) != null)   {
+   		int cont = 0;
+		while (((strLine = br.readLine()) != null) && (cont<10))   {
    			//System.out.println (i++);
-   			i++;
-   			oa.createIndividual(ontology, manager, factory, contextOntIRI + "#O" + Integer.toString(i) , Observation);
+   			cont++;
+			String dString = strLine.split(" ")[1];
+			String newD = dString.split("-")[2] + "-" + dString.split("-")[1] + "-" + dString.split("-")[0];
+			OWLLiteral date = factory.getOWLLiteral(newD + "T" + strLine.split(" ")[2]+".000",OWL2Datatype.XSD_DATE_TIME);
+		    OWLLiteral date1 = factory.getOWLLiteral("2009-07-19T12:32:00.000",OWL2Datatype.XSD_DATE_TIME);
+		    OWLLiteral date2 = factory.getOWLLiteral("2010-07-19T12:32:00.000",OWL2Datatype.XSD_DATE_TIME);
+		    oa.createIndividual(ontology, manager, factory, contextOntIRI + "#TI" + Integer.toString(i), ValidInstant);
+		    if(i==0)
+		    	oa.assignValueToDataTypeProperty(ontology, manager, factory, hasTimeT, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#TI" + Integer.toString(i))), date);
+		    else
+		    	oa.assignValueToDataTypeProperty(ontology, manager, factory, hasTimeT, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#TI" + Integer.toString(i))), date);
+		    oa.createIndividual(ontology, manager, factory, contextOntIRI + "#O" + Integer.toString(i) , Observation);
    			oa.relateIndividuals(ontology, manager, factory, madeBySensor, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), SensorTemp);
    			oa.relateIndividuals(ontology, manager, factory, observedProperty, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), Temperature);
    			oa.assignValueToDataTypeProperty(ontology, manager, factory, hasSimpleResult, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), factory.getOWLLiteral(Double.parseDouble(strLine.split(" ")[3])));
-   			oa.assignValueToDataTypeProperty(ontology, manager, factory, resultTime, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), factory.getOWLLiteral(strLine.split(" ")[1] + " " + strLine.split(" ")[2]));
-   		}
+   			if (i==0) {
+   				oa.assignValueToDataTypeProperty(ontology, manager, factory, resultTime, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), date);
+   			}
+   			else {
+   				oa.assignValueToDataTypeProperty(ontology, manager, factory, resultTime, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), date);
+   			}
+   			i++;
+   			System.out.println (newD+ "T" + strLine.split(" ")[2]+".000");
+   			
+   			SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);   			
+   			ruleEngine.infer();
+   			
+		}
 		br.close();
+		
+		//ruleEngine.infer();
 
-		SWRLVariable var = factory.getSWRLVariable(IRI.create(contextOntIRI + "#x"));
-		SWRLClassAtom body = factory.getSWRLClassAtom(Machine, var);
-		SWRLClassAtom head = factory.getSWRLClassAtom(ManufacturingFacility, var);
-		SWRLRule rule = factory.getSWRLRule(Collections.singleton(body), Collections.singleton(head));
-		manager.applyChange(new AddAxiom(ontology, rule));
 
-		//SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);
-		SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);
-
-		// Create SQWRL query engine using the SWRLAPI
-		SQWRLQueryEngine queryEngine = SWRLAPIFactory.createSQWRLQueryEngine(ontology);
-
-		// Create and execute a SQWRL query using the SWRLAPI
-		SQWRLResult result = queryEngine.runSQWRLQuery("q1","swrlb:add(?x, 2, 2) -> sqwrl:select(?x)");
-
-		// Process the SQWRL result
-		if (result.next()) 
-		  System.out.println("Name: " + result.getLiteral("x"));
-		  
-			
 		/* Save ontology */
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		//manager.saveOntology(ontology, System.out);
-
-		
-		//try {
-		//	SWRLRule rule = ruleEngine.createSWRLRule("r1", "swrlb:add(?x, 2, 2) -> sqwrl:select(?x)");
-		//} catch (SWRLBuiltInException e) {
-			// TODO Auto-generated catch block
-		//	e.printStackTrace();
-		//}
-		// Run the rule engine
-		//ruleEngine.infer();
-		 
-		//SQWRLQueryEngine queryEngine = SWRLAPIFactory.createSQWRLQueryEngine(ontology);
-
-		//queryEngine.createSQWRLQuery("Q1", "Machine(?p) -> sqwrl:select(?p)");
-
-		//SQWRLResult result = queryEngine.runSQWRLQuery("Q1");
 
 	}
 
