@@ -63,6 +63,7 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 import org.swrlapi.builtins.arguments.SWRLDataPropertyBuiltInArgument;
 import org.swrlapi.core.SWRLAPIBuiltInAtom;
+import org.swrlapi.core.SWRLAPIOWLOntology;
 import org.swrlapi.core.SWRLRuleEngine;
 import org.swrlapi.exceptions.SWRLBuiltInException;
 import org.swrlapi.factory.SWRLAPIFactory;
@@ -201,6 +202,7 @@ public class Main {
 		String sensor = "http://www.w3.org/ns/sosa/Sensor";
 		OWLClass Sensor = factory.getOWLClass(IRI.create(sensor));
 		OWLClass Property = factory.getOWLClass(IRI.create("http://www.w3.org/ns/ssn/Property"));
+		OWLClass ObservableProperty = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/ObservableProperty"));
 		OWLClass Observation = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Observation"));
 		OWLClass Result = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Result"));
 		
@@ -230,6 +232,8 @@ public class Main {
 		OWLObjectProperty operates = oa.createObjectProperty(ontology, manager, factory, contextOntIRI + "#operates", Staff, ManufacturingFacility);
 		OWLObjectProperty contains = oa.createObjectProperty(ontology, manager, factory, contextOntIRI + "#contains", WorkStation, Machine);
 		
+		OWLObjectProperty hasTimeObs = oa.createObjectProperty(ontology, manager, factory, contextOntIRI + "#hasTimeResult", Observation, Time);
+		
 		OWLObjectProperty observedProperty = factory.getOWLObjectProperty(IRI.create("http://www.w3.org/ns/sosa/observedProperty"));
 
 		OWLObjectProperty madeBySensor = factory.getOWLObjectProperty(IRI.create("http://www.w3.org/ns/sosa/madeBySensor"));
@@ -246,44 +250,61 @@ public class Main {
 		OWLDataProperty hasTimeT = factory.getOWLDataProperty(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#hasTime"));
 		
 		/* Individuals */
-		OWLIndividual Machine_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Machine_1", Machine);
+		OWLIndividual ProductionLine_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#ProductionLine_1", Line);
+		
+		OWLIndividual Cell_PL1_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Cell_PL1_1", Cell);
+		OWLIndividual Cell_PL1_2 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Cell_PL1_2", Cell);
+		
+		OWLIndividual WorkStation_C1_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Workstation_C1_1", WorkStation);
+		OWLIndividual WorkStation_C2_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Workstation_C2_1", WorkStation);
+		
+		OWLIndividual Machine_WS1_C1_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Machine_WS1_C1_1", Machine);
+		OWLIndividual Machine_WS1_C1_2 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Machine_WS1_C1_2", Machine);
+		OWLIndividual Machine_WS1_C2_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Machine_WS1_C2_1", Machine);
+		OWLIndividual Machine_WS1_C2_2 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Machine_WS1_C2_2", Machine);
+		
 		OWLIndividual Operator_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Operator_1", Operator);
 
-		OWLIndividual Temperature = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Temperature", Property);
-
-		OWLIndividual SensorTemp = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#SensorTemp", Sensor);
+		OWLIndividual OProperty_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#OProperty_1", ObservableProperty);
+		OWLIndividual OProperty_2 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#OProperty_2", ObservableProperty);
+		OWLIndividual OProperty_3 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#OProperty_3", ObservableProperty);
+		OWLIndividual OProperty_4 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#OProperty_4", ObservableProperty);
+		OWLIndividual OProperty_5 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#OProperty_5", ObservableProperty);
+		OWLIndividual OProperty_6 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#OProperty_6", ObservableProperty);
+		OWLIndividual OProperty_7 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#OProperty_7", ObservableProperty);
 		
-		oa.relateIndividuals(ontology, manager, factory, hasProperty, Machine_1, Temperature);
-		oa.relateIndividuals(ontology, manager, factory, hasSensor, Machine_1, SensorTemp);
+		OWLIndividual Sensor_1 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_1", Sensor);
+		OWLIndividual Sensor_2 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_2", Sensor);
+		OWLIndividual Sensor_3 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_3", Sensor);
+		OWLIndividual Sensor_4 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_4", Sensor);
+		OWLIndividual Sensor_5 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_5", Sensor);
+		OWLIndividual Sensor_6 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_6", Sensor);
+		OWLIndividual Sensor_7 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_7", Sensor);
+		OWLIndividual Sensor_8 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_8", Sensor);
+		OWLIndividual Sensor_9 = oa.createIndividual(ontology, manager, factory, contextOntIRI + "#Sensor_9", Sensor);
 		
-		oa.relateIndividuals(ontology, manager, factory, operates, Operator_1, Machine_1);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, ProductionLine_1, OProperty_1);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, Cell_PL1_1, OProperty_2);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, Cell_PL1_2, OProperty_3);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, WorkStation_C1_1, OProperty_4);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, WorkStation_C2_1, OProperty_5);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, Machine_WS1_C1_1, OProperty_6);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, Machine_WS1_C1_2, OProperty_7);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, Machine_WS1_C2_1, OProperty_6);
+		oa.relateIndividuals(ontology, manager, factory, hasProperty, Machine_WS1_C2_2, OProperty_7);
 		
-	    
-		oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(33.2));
-		oa.assignValueToDataTypeProperty(ontology, manager, factory, value, Temperature, factory.getOWLLiteral(36.2));
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, ProductionLine_1, Sensor_1);
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, Cell_PL1_1, Sensor_2);
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, Cell_PL1_2, Sensor_3);
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, WorkStation_C1_1, Sensor_4);
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, WorkStation_C2_1, Sensor_5);
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, Machine_WS1_C1_1, Sensor_6);
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, Machine_WS1_C1_2, Sensor_7);
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, Machine_WS1_C2_1, Sensor_8);
+		oa.relateIndividuals(ontology, manager, factory, hasSensor, Machine_WS1_C2_2, Sensor_9);
 		
+		oa.relateIndividuals(ontology, manager, factory, operates, Operator_1, Machine_WS1_C1_1);
 		
-		
-		
-		/* // To put together data, labels and timestamps.
-		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom.data");
-		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-		FileInputStream fstream1 = new FileInputStream("/home/franco/DataSets/SECOM/secom_labels.data");
-		BufferedReader br1 = new BufferedReader(new InputStreamReader(fstream1));
-		String strLine;
-		String strLine1;
-		FileWriter fichero = null;
-        PrintWriter pw = null;
-        fichero = new FileWriter("/home/franco/DataSets/SECOM/secom_final.data");
-        pw = new PrintWriter(fichero);
-   		while (((strLine = br.readLine()) != null) && ((strLine1 = br1.readLine()) != null))   {
-		  System.out.println (strLine1);
-		  pw.println(strLine1 + " " + strLine);
-		}
-		br.close();
-		br1.close();
-		pw.close(); */
-
 		
 		//Observation(?p)^hasSimpleResult(?p, ?age)^swrlb:greaterThan(?age, 3029) -> Danger(?p)
 		SWRLVariable obs1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#x"));
@@ -333,16 +354,16 @@ public class Main {
 		Set<SWRLAtom> antecedent = new HashSet<SWRLAtom>();
 		antecedent.add(atom);
 		antecedent.add(atom1);
-        antecedent.add(atom2);
+        //antecedent.add(atom2);
         antecedent.add(atom3);
-        antecedent.add(atom4);
+        //antecedent.add(atom4);
         antecedent.add(atom5);
-        antecedent.add(atom6);
+        //antecedent.add(atom6);
         //antecedent.add(atom7);
         //antecedent.add(atom8);
         //antecedent.add(atom9);
         //antecedent.add(atom10);
-        antecedent.add(atom11);
+        //antecedent.add(atom11);
         //antecedent.add(atom12);
 
 
@@ -361,36 +382,31 @@ public class Main {
 		int i = 0;
    		int cont = 0;
 		while (((strLine = br.readLine()) != null) && (cont<10))   {
-   			//System.out.println (i++);
    			cont++;
-			String dString = strLine.split(" ")[1];
+   			i++;
+   			String dString = strLine.split(" ")[1];
 			String newD = dString.split("-")[2] + "-" + dString.split("-")[1] + "-" + dString.split("-")[0];
 			OWLLiteral date = factory.getOWLLiteral(newD + "T" + strLine.split(" ")[2]+".000",OWL2Datatype.XSD_DATE_TIME);
-		    OWLLiteral date1 = factory.getOWLLiteral("2009-07-19T12:32:00.000",OWL2Datatype.XSD_DATE_TIME);
-		    OWLLiteral date2 = factory.getOWLLiteral("2010-07-19T12:32:00.000",OWL2Datatype.XSD_DATE_TIME);
 		    oa.createIndividual(ontology, manager, factory, contextOntIRI + "#TI" + Integer.toString(i), ValidInstant);
-		    if(i==0)
-		    	oa.assignValueToDataTypeProperty(ontology, manager, factory, hasTimeT, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#TI" + Integer.toString(i))), date);
-		    else
-		    	oa.assignValueToDataTypeProperty(ontology, manager, factory, hasTimeT, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#TI" + Integer.toString(i))), date);
+		    oa.assignValueToDataTypeProperty(ontology, manager, factory, hasTimeT, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#TI" + Integer.toString(i))), date);
 		    oa.createIndividual(ontology, manager, factory, contextOntIRI + "#O" + Integer.toString(i) , Observation);
-   			oa.relateIndividuals(ontology, manager, factory, madeBySensor, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), SensorTemp);
-   			oa.relateIndividuals(ontology, manager, factory, observedProperty, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), Temperature);
+   			oa.relateIndividuals(ontology, manager, factory, madeBySensor, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), Sensor_1);
+   			oa.relateIndividuals(ontology, manager, factory, observedProperty, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), OProperty_1);
    			oa.assignValueToDataTypeProperty(ontology, manager, factory, hasSimpleResult, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), factory.getOWLLiteral(Double.parseDouble(strLine.split(" ")[3])));
-   			if (i==0) {
-   				oa.assignValueToDataTypeProperty(ontology, manager, factory, resultTime, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), date);
-   			}
-   			else {
-   				oa.assignValueToDataTypeProperty(ontology, manager, factory, resultTime, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), date);
-   			}
-   			i++;
+   			oa.assignValueToDataTypeProperty(ontology, manager, factory, resultTime, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), date);
+   			oa.relateIndividuals(ontology, manager, factory, hasTimeObs, factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#O" + Integer.toString(i))), factory.getOWLNamedIndividual(IRI.create(contextOntIRI + "#TI" + Integer.toString(i)))); 
+
    			System.out.println (newD+ "T" + strLine.split(" ")[2]+".000");
    			
    			SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);   			
    			ruleEngine.infer();
-   			
+   			//ruleEngine.importAssertedOWLAxioms();
+   			//ruleEngine.run();
+   			//ruleEngine.exportInferredOWLAxioms();
 		}
 		br.close();
+		
+		//manager.removeAxiom(ontology, rule);
 		
 		//ruleEngine.infer();
 
@@ -400,6 +416,23 @@ public class Main {
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		//manager.saveOntology(ontology, System.out);
 
+		/* // To put together data, labels and timestamps.
+		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom.data");
+		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+		FileInputStream fstream1 = new FileInputStream("/home/franco/DataSets/SECOM/secom_labels.data");
+		BufferedReader br1 = new BufferedReader(new InputStreamReader(fstream1));
+		String strLine;
+		String strLine1;
+		FileWriter fichero = null;
+        PrintWriter pw = null;
+        fichero = new FileWriter("/home/franco/DataSets/SECOM/secom_final.data");
+        pw = new PrintWriter(fichero);
+   		while (((strLine = br.readLine()) != null) && ((strLine1 = br1.readLine()) != null))   {
+		  System.out.println (strLine1);
+		  pw.println(strLine1 + " " + strLine);
+		}
+		br.close();
+		br1.close();
+		pw.close(); */
 	}
-
 }
