@@ -17,8 +17,10 @@ import java.util.stream.Stream;
 
 import org.checkerframework.checker.i18nformatter.qual.I18nFormat;
 import org.checkerframework.dataflow.cfg.node.GreaterThanNode;
+import org.nfunk.jep.function.If;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.change.CreateValuePartition;
+import org.semanticweb.owlapi.io.StringDocumentTarget;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.AddImport;
 //import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
@@ -56,9 +58,18 @@ import org.semanticweb.owlapi.model.SWRLLiteralArgument;
 import org.semanticweb.owlapi.model.SWRLObjectPropertyAtom;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.model.SWRLVariable;
+import org.semanticweb.owlapi.reasoner.ConsoleProgressMonitor;
+import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.SimpleConfiguration;
+import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
+import org.semanticweb.owlapi.util.InferredAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredOntologyGenerator;
+import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 import org.swrlapi.builtins.arguments.SWRLDataPropertyBuiltInArgument;
@@ -67,14 +78,16 @@ import org.swrlapi.core.SWRLAPIOWLOntology;
 import org.swrlapi.core.SWRLRuleEngine;
 import org.swrlapi.exceptions.SWRLBuiltInException;
 import org.swrlapi.factory.SWRLAPIFactory;
+import org.swrlapi.owl2rl.OWL2RLEngine;
 import org.swrlapi.parser.SWRLParseException;
 import org.swrlapi.sqwrl.SQWRLQueryEngine;
 import org.swrlapi.sqwrl.SQWRLResult;
 import org.swrlapi.sqwrl.exceptions.SQWRLException;
+import org.swrlapi.ui.view.owl2rl.OWL2RLControlView;
 
 import com.google.common.collect.Lists;
-
 //import com.google.common.io.Files;
+import org.swrlapi.owl2rl.OWL2RLEngine;
 
 public class Main {
 
@@ -212,8 +225,8 @@ public class Main {
 		OWLClass Time = factory.getOWLClass(IRI.create(time));
 		String validInstant = "http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#ValidInstant";
 		OWLClass ValidInstant = factory.getOWLClass(IRI.create(validInstant));
-		
-		
+
+
 		/* Object Properties */
 		OWLObjectProperty isInLocation = oa.createObjectProperty(ontology, manager, factory, contextOntIRI + "#isInLocation", Resource, Location);
 		OWLObjectProperty appliesTo = oa.createObjectProperty(ontology, manager, factory, contextOntIRI + "#appliesTo", Process, Resource);
@@ -306,13 +319,20 @@ public class Main {
 		oa.relateIndividuals(ontology, manager, factory, operates, Operator_1, Machine_WS1_C1_1);
 		
 		
-		//Observation(?p)^hasSimpleResult(?p, ?age)^swrlb:greaterThan(?age, 3029) -> Danger(?p)
+		/*
+		sosa:resultTime(?x, ?z1) ^ swrlb:greaterThan(?y, "3030.0"^^xsd:double) ^ 
+		sosa:Observation(?x) ^ sosa:hasSimpleResult(?x, ?y) 
+		-> 
+		Danger(?x)
+		*/
+		
 		SWRLVariable obs1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#x"));
 		SWRLVariable obs2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#x1"));
 		SWRLVariable res1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#y"));
 		SWRLVariable res2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#y1"));
 		SWRLVariable time1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#z1"));
 		SWRLVariable time2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#z2"));
+
 		SWRLVariable validInstant1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#a"));
 		SWRLVariable validInstant2 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#b"));
 		SWRLVariable timeVI1 = factory.getSWRLVariable(IRI.create(contextOntIRI + "#c"));
@@ -371,10 +391,8 @@ public class Main {
 		SWRLRule rule = factory.getSWRLRule(antecedent, Collections.singleton(head));
 		manager.applyChange(new AddAxiom(ontology, rule));
 
-
 		//SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);
-
-
+		
 		/* Populate ontology with data from sensors */
 		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom_final.data");
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
@@ -400,21 +418,38 @@ public class Main {
    			
    			SWRLRuleEngine ruleEngine = SWRLAPIFactory.createSWRLRuleEngine(ontology);   			
    			ruleEngine.infer();
+
    			//ruleEngine.importAssertedOWLAxioms();
    			//ruleEngine.run();
    			//ruleEngine.exportInferredOWLAxioms();
 		}
 		br.close();
-		
-		//manager.removeAxiom(ontology, rule);
-		
-		//ruleEngine.infer();
-
 
 		/* Save ontology */
 		File file = new File("/home/franco/Repositories/Context/ContextOntology.owl");
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		//manager.saveOntology(ontology, System.out);
+
+		
+		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
+		ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
+		OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
+		OWLReasoner reasoner = reasonerFactory.createReasoner(ontology, config);
+		reasoner.precomputeInferences(InferenceType.CLASS_ASSERTIONS);
+
+		NodeSet<OWLClass> subClses = reasoner.getSubClasses(Resource, true);
+		Set<OWLClass> clses = subClses.getFlattened();
+        for (OWLClass cls : clses) {
+        	System.out.println(" " + cls);
+		}
+        
+        String answer;
+        
+        if (reasoner.isConsistent()) answer = "Ouiiiii!!!"; else answer = "No";
+		
+        System.out.println ("The ontology is Consistent? " + answer);
+
+		//manager.removeAxiom(ontology, rule);
 
 		/* // To put together data, labels and timestamps.
 		FileInputStream fstream = new FileInputStream("/home/franco/DataSets/SECOM/secom.data");
