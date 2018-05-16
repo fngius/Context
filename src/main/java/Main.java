@@ -113,13 +113,17 @@ public class Main {
 
 	    /* Imported Ontologies */
 		//OWLImportsDeclaration importDeclarationTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/2006/time"));
-		OWLImportsDeclaration importDeclarationTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"));
+		String pre_SWRLTO = "http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl";
+	    OWLImportsDeclaration importDeclarationTO = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create(pre_SWRLTO));
 		manager.applyChange(new AddImport(ontology, importDeclarationTO));		
 		
-		OWLImportsDeclaration importDeclarationLOC = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://schemas.opengis.net/geosparql/1.0/geosparql_vocab_all.rdf"));
+		String pre_geoOnt = "http://schemas.opengis.net/geosparql/1.0/geosparql_vocab_all.rdf";
+		OWLImportsDeclaration importDeclarationLOC = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create(pre_geoOnt));
 		manager.applyChange(new AddImport(ontology, importDeclarationLOC));
 		
-		OWLImportsDeclaration importDeclarationSSN = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create("http://www.w3.org/ns/ssn/"));
+		String pre_SOSAOnt = "http://www.w3.org/ns/sosa/";
+		String pre_SSNOnt = "http://www.w3.org/ns/ssn/";
+		OWLImportsDeclaration importDeclarationSSN = manager.getOWLDataFactory().getOWLImportsDeclaration(IRI.create(pre_SSNOnt));
 		manager.applyChange(new AddImport(ontology, importDeclarationSSN));
 
 		/* Classes */
@@ -208,22 +212,27 @@ public class Main {
 		oa.subClass(ontology, manager, factory, Sit_Classification, Situation);
 
 		// Replace this class
-		//OWLClass Location = oa.createClass(ontology,manager,factory,contextOntIRI+"#Location");
-		String location = "http://www.opengis.net/ont/geosparql#SpatialObject";
+		String location = pre_geoOnt + "#SpatialObject";
 		OWLClass Location = factory.getOWLClass(IRI.create(location));
 		
-		String sensor = "http://www.w3.org/ns/sosa/Sensor";
+		String featureLoc = pre_geoOnt + "#Feature";
+		OWLClass Feature = factory.getOWLClass(IRI.create(featureLoc));
+		
+		String geometryLoc = pre_geoOnt + "#Geometry";
+		OWLClass Geometry = factory.getOWLClass(IRI.create(geometryLoc));
+		
+		String sensor = pre_SOSAOnt + "Sensor";
 		OWLClass Sensor = factory.getOWLClass(IRI.create(sensor));
-		OWLClass Property = factory.getOWLClass(IRI.create("http://www.w3.org/ns/ssn/Property"));
-		OWLClass ObservableProperty = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/ObservableProperty"));
-		OWLClass Observation = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Observation"));
-		OWLClass Result = factory.getOWLClass(IRI.create("http://www.w3.org/ns/sosa/Result"));
+		OWLClass Property = factory.getOWLClass(IRI.create(pre_SSNOnt + "Property"));
+		OWLClass ObservableProperty = factory.getOWLClass(IRI.create(pre_SOSAOnt + "ObservableProperty"));
+		OWLClass Observation = factory.getOWLClass(IRI.create(pre_SOSAOnt + "Observation"));
+		OWLClass Result = factory.getOWLClass(IRI.create(pre_SOSAOnt + "Result"));
 		
 		
 		//String time = "http://www.w3.org/2006/time#TemporalEntity";
-		String time = "http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#ValidTime";
+		String time = pre_SWRLTO + "#ValidTime";
 		OWLClass Time = factory.getOWLClass(IRI.create(time));
-		String validInstant = "http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl#ValidInstant";
+		String validInstant = pre_SWRLTO + "#ValidInstant";
 		OWLClass ValidInstant = factory.getOWLClass(IRI.create(validInstant));
 
 
@@ -430,7 +439,7 @@ public class Main {
 		manager.saveOntology(ontology, IRI.create(file.toURI()));
 		//manager.saveOntology(ontology, System.out);
 
-		
+
 		OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
 		ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor();
 		OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor);
